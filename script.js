@@ -26,15 +26,26 @@ const DEFAULT_SETTINGS = {
   emailProvider: 'mailto',
   emailSubject: '{{senderFirstName}} | Following up with {{company}}',
   emailBody:
-`Hi {{first_name}},
+`Hi,
 
-It was great connecting earlier.
+It was really great speaking with you earlier.
 
-I wanted to follow up with a quick note from {{senderCompany}}. Please let me know a good time to chat more about how we can help {{company}}.
+I'm {{senderFirstName}}, founder of {{senderCompany}}. We help hospitality venues turn their cocktail specs, SOPs, and training videos into a simple, pocket-ready web app, so new hires ramp up faster, pours stay consistent during a rush, and managers stop losing hours updating binders nobody reads.
+
+Instead of sending a pitch deck, I put together an interactive demo so you can feel how it works in 60 seconds:
+
+https://empiredevstudio.github.io/Demo-Home/
+
+
+When you've had a quick scroll, I'd love your unfiltered take:
+1. Where does your team lose the most time with training or spec updates right now?
+2. What feels genuinely useful or is missing from the demo?
+Looking forward to hearing from you.
 
 Best,
+
 {{senderName}}
-{{senderTitle}}, {{senderCompany}}`,
+{{senderTitle}} | {{senderCompany}}`,
 
   // Tab 2: Daily Target & Tree
   dailyTarget: 20,
@@ -505,7 +516,7 @@ function configureEmailAnchor(anchorEl, href) {
   anchorEl.href = href;
   const isDisabled = href === '#';
   anchorEl.classList.toggle('is-disabled', isDisabled);
-  if (!isDisabled && settings.emailProvider !== 'mailto') {
+  if (!isDisabled) {
     anchorEl.setAttribute('target', '_blank');
     anchorEl.setAttribute('rel', 'noopener noreferrer');
   } else {
