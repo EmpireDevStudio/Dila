@@ -3,501 +3,626 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#F4F1EA">
+  <meta name="theme-color" content="#F7F3EB">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="FlipDialler">
-  <title>FlipDialler — Living Paper</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="apple-mobile-web-app-title" content="Dialler CRM">
+  <title>Dialler CRM: Outreach &amp; Client Desk</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <div class="app-shell">
+  <div class="atmosphere-layer" aria-hidden="true"></div>
 
-    <!-- EXECUTIVE MASTHEAD -->
+  <div class="app-shell">
+    <!-- COMPACT EXECUTIVE HEADER -->
     <header class="app-header">
       <div class="brand">
-        <div class="brand-crest" aria-hidden="true">FD</div>
+        <div class="brand-crest" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="20" height="20" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M16 24V12M16 17.5C13.6 15.8 11.8 14 10.8 11.6M16 15.2C18.4 13.8 20.1 12.1 21.3 9.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="16" cy="9.2" r="1.9" fill="currentColor"/>
+            <circle cx="10.5" cy="11.4" r="1.4" fill="currentColor"/>
+            <circle cx="21.5" cy="9.6" r="1.4" fill="currentColor"/>
+          </svg>
+        </div>
         <div class="brand-text">
-          <span class="brand-title">FlipDialler</span>
-          <span class="brand-tag">Outreach Desk</span>
+          <span class="brand-title">Dialler CRM</span>
+          <span class="brand-tag">Outreach &amp; Client Desk</span>
         </div>
       </div>
 
       <div class="header-actions">
+        <div class="daily-pill" id="headerDailyPill" title="Daily target progress">
+          <span class="daily-pill-dot" aria-hidden="true"></span>
+          <span id="headerDailyText">0 / 20</span>
+        </div>
+
         <label for="csvFileInput" class="btn btn-vellum btn-compact desktop-only-action" title="Import CSV">
-          <span class="btn-ico">📥</span><span class="btn-lbl">Import</span>
+          <svg viewBox="0 0 20 20" width="14" height="14" fill="none" aria-hidden="true">
+            <path d="M10 3V13M10 13L6 9M10 13L14 9M4 16H16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Import</span>
         </label>
         <input type="file" id="csvFileInput" accept=".csv,text/csv" hidden>
 
         <button id="btnExportCsv" class="btn btn-vellum btn-compact desktop-only-action" type="button" title="Export CSV">
-          <span class="btn-ico">📤</span><span class="btn-lbl">Export</span>
+          <svg viewBox="0 0 20 20" width="14" height="14" fill="none" aria-hidden="true">
+            <path d="M10 13V3M10 3L6 7M10 3L14 7M4 16H16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Export</span>
         </button>
 
         <button id="btnNewLead" class="btn btn-vellum btn-compact" type="button" title="Add New Lead">
-          <span class="btn-ico">＋</span><span class="btn-lbl">Lead</span>
+          <svg viewBox="0 0 20 20" width="14" height="14" fill="none" aria-hidden="true">
+            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>Lead</span>
         </button>
 
         <button id="btnOpenSettings" class="btn btn-primary btn-compact" type="button" title="Settings (,)">
-          <span class="btn-ico">⚙️</span><span class="btn-lbl">Settings</span>
+          <svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 2.5V4.5M10 15.5V17.5M2.5 10H4.5M15.5 10H17.5M4.7 4.7L6.1 6.1M13.9 13.9L15.3 15.3M15.3 4.7L13.9 6.1M6.1 13.9L4.7 15.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="btn-lbl">Settings</span>
         </button>
 
-        <!-- MOBILE MORE / CSV POPOVER MENU -->
+        <!-- MOBILE MORE MENU -->
         <div class="mobile-more-wrap">
           <button id="btnMobileMore" class="btn btn-vellum btn-compact btn-icon-only" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Import and Export Menu">
-            ⋯
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <circle cx="4" cy="10" r="1.6"/><circle cx="10" cy="10" r="1.6"/><circle cx="16" cy="10" r="1.6"/>
+            </svg>
           </button>
           <div id="mobileHeaderMenu" class="header-popover hidden" role="menu">
-            <button id="btnMenuImportCsv" class="popover-item" type="button" role="menuitem">
-              <span>📥</span><span>Import CSV Leads</span>
-            </button>
-            <button id="btnMenuExportCsv" class="popover-item" type="button" role="menuitem">
-              <span>📤</span><span>Export CSV Leads</span>
-            </button>
+            <button id="btnMenuImportCsv" class="popover-item" type="button" role="menuitem">Import CSV Leads</button>
+            <button id="btnMenuExportCsv" class="popover-item" type="button" role="menuitem">Export CSV Leads</button>
+            <button id="btnMenuSampleLeads" class="popover-item" type="button" role="menuitem">Load Sample Leads</button>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- WORKBENCH WRAPPER -->
+    <!-- LEFT 30% TREE / RIGHT 70% CRM WORKBENCH (LEFT-RIGHT SPLIT ON ALL SCREEN SIZES) -->
     <main class="workbench" id="workbench">
 
-      <!-- PANE 1: PIPELINE LIST & SEARCH -->
-      <aside class="pane pane-list" id="paneList">
-        <div class="list-sticky-top">
-          <div class="segmented-control" role="tablist" aria-label="Pipeline Stages">
-            <button class="filter-btn active" data-stage="prospects" role="tab" type="button">
-              <span>Prospects</span>
-              <span class="badge" id="countProspects">0</span>
-            </button>
-            <button class="filter-btn" data-stage="followup" role="tab" type="button">
-              <span>Follow-Up</span>
-              <span class="badge badge-blue" id="countFollowup">0</span>
-            </button>
-            <button class="filter-btn" data-stage="partial" role="tab" type="button">
-              <span>Partial</span>
-              <span class="badge badge-gold" id="countPartial">0</span>
-            </button>
-            <button class="filter-btn" data-stage="completed" role="tab" type="button">
-              <span>Emailed</span>
-              <span class="badge badge-green" id="countCompleted">0</span>
-            </button>
-            <button class="filter-btn" data-stage="onboarded" role="tab" type="button">
-              <span>Onboarded</span>
-              <span class="badge badge-emerald" id="countOnboarded">0</span>
-            </button>
-            <button class="filter-btn" data-stage="all" role="tab" type="button">
-              <span>All</span>
-              <span class="badge" id="countAll">0</span>
-            </button>
-          </div>
+      <!-- 1. PERSISTENT LEFT 30% ROSE-GOLD TREE STAGE -->
+      <aside class="tree-stage" id="tree-stage" aria-hidden="true">
+        <div class="tree-gold-aura" id="tree-gold-aura"></div>
+        <canvas id="tree-canvas"></canvas>
 
-          <div class="search-wrap" id="listSearchWrap">
-            <span class="search-glyph" aria-hidden="true">⌕</span>
-            <input type="search" id="inputSearch" placeholder="Search venue, name, city, phone..." autocomplete="off">
-            <button id="btnClearSearch" class="search-clear-btn hidden" type="button" aria-label="Clear search">✕</button>
+        <!-- Graceful SVG Botanical Fallback if WebGL is unavailable -->
+        <svg id="tree-fallback-svg" class="tree-fallback-svg" viewBox="0 0 800 960" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation">
+          <defs>
+            <linearGradient id="rg-trunk" x1="250" y1="880" x2="560" y2="180" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#96614E"/>
+              <stop offset="40%" stop-color="#C9977F"/>
+              <stop offset="100%" stop-color="#E5C2AE"/>
+            </linearGradient>
+            <linearGradient id="rg-branch" x1="160" y1="620" x2="640" y2="140" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#AD745E"/>
+              <stop offset="50%" stop-color="#D9BD98"/>
+              <stop offset="100%" stop-color="#C9977F"/>
+            </linearGradient>
+            <radialGradient id="rg-blossom" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#FFFDF7"/>
+              <stop offset="50%" stop-color="#F2D1B3"/>
+              <stop offset="100%" stop-color="#C9977F"/>
+            </radialGradient>
+          </defs>
+          <path class="svg-grow-path" data-start="0.00" data-end="0.32" d="M412 810 C390 835, 345 848, 275 860 C235 866, 200 876, 174 888" stroke="url(#rg-trunk)" stroke-width="7" stroke-linecap="round"/>
+          <path class="svg-grow-path" data-start="0.02" data-end="0.34" d="M424 810 C448 836, 498 852, 568 864 C606 870, 642 878, 666 892" stroke="url(#rg-trunk)" stroke-width="6.5" stroke-linecap="round"/>
+          <path class="svg-grow-path" data-start="0.00" data-end="0.44" d="M418 818 C406 720, 444 630, 426 530 C412 455, 388 405, 412 310" stroke="url(#rg-trunk)" stroke-width="18" stroke-linecap="round"/>
+          <path class="svg-grow-path" data-start="0.25" data-end="0.58" d="M418 470 C478 432, 548 398, 616 352 C642 334, 668 314, 690 294" stroke="url(#rg-branch)" stroke-width="9.5" stroke-linecap="round"/>
+          <path class="svg-grow-path" data-start="0.32" data-end="0.64" d="M412 360 C456 306, 506 254, 548 194 C564 172, 578 152, 592 132" stroke="url(#rg-branch)" stroke-width="7.5" stroke-linecap="round"/>
+          <path class="svg-grow-path" data-start="0.38" data-end="0.68" d="M412 314 C406 256, 412 198, 428 134 C434 108, 442 88, 448 68" stroke="url(#rg-branch)" stroke-width="6.5" stroke-linecap="round"/>
+          <g class="svg-bloom-node" data-start="0.72" data-end="0.96" transform="translate(448 68) scale(1.2)">
+            <circle cx="0" cy="-11" r="8" fill="url(#rg-blossom)"/><circle cx="10" cy="-3" r="8" fill="url(#rg-blossom)"/><circle cx="6" cy="9" r="8" fill="url(#rg-blossom)"/><circle cx="-6" cy="9" r="8" fill="url(#rg-blossom)"/><circle cx="-10" cy="-3" r="8" fill="url(#rg-blossom)"/><circle cx="0" cy="0" r="4" fill="#96614E"/>
+          </g>
+          <g class="svg-bloom-node" data-start="0.76" data-end="0.98" transform="translate(592 132) scale(1.1)">
+            <circle cx="0" cy="-11" r="8" fill="url(#rg-blossom)"/><circle cx="10" cy="-3" r="8" fill="url(#rg-blossom)"/><circle cx="6" cy="9" r="8" fill="url(#rg-blossom)"/><circle cx="-6" cy="9" r="8" fill="url(#rg-blossom)"/><circle cx="-10" cy="-3" r="8" fill="url(#rg-blossom)"/><circle cx="0" cy="0" r="4" fill="#96614E"/>
+          </g>
+          <g class="svg-bloom-node" data-start="0.80" data-end="1.00" transform="translate(690 294) scale(1.05)">
+            <circle cx="0" cy="-11" r="8" fill="url(#rg-blossom)"/><circle cx="10" cy="-3" r="8" fill="url(#rg-blossom)"/><circle cx="6" cy="9" r="8" fill="url(#rg-blossom)"/><circle cx="-6" cy="9" r="8" fill="url(#rg-blossom)"/><circle cx="-10" cy="-3" r="8" fill="url(#rg-blossom)"/><circle cx="0" cy="0" r="4" fill="#96614E"/>
+          </g>
+        </svg>
+
+        <div class="tree-stage-badge" id="tree-stage-badge">
+          <div class="tree-badge-top">
+            <span class="badge-dot"></span>
+            <span id="tree-stage-label">0 / 20 Today</span>
+          </div>
+          <div class="tree-progress-bar">
+            <div class="tree-progress-fill" id="tree-progress-fill"></div>
           </div>
         </div>
-
-        <div class="contact-list" id="contactList" role="list"></div>
       </aside>
 
-      <!-- PANE 2: ACTIVE LEAD COCKPIT -->
-      <section class="pane pane-cockpit" id="paneCockpit" aria-label="Active Prospect">
+      <!-- 2. RIGHT 70% WORKSPACE SHELL -->
+      <div class="crm-workspace" id="crmWorkspace">
 
-        <!-- MOBILE NAVIGATION BAR (PUSH VIEW HEADER) -->
-        <div class="mobile-cockpit-nav">
-          <button id="btnBackToList" class="nav-back-btn" type="button">
-            <span class="nav-chevron">‹</span>
-            <span>Pipeline</span>
-          </button>
-
-          <div class="nav-center-meta">
-            <span id="mobileNavTitle" class="nav-title">Prospect</span>
-            <span id="mobileQueueCounter" class="nav-counter">0 / 0</span>
-          </div>
-
-          <div class="nav-stepper">
-            <button id="btnPrevLead" class="stepper-btn" type="button" aria-label="Previous Lead">‹</button>
-            <button id="btnNextLead" class="stepper-btn" type="button" aria-label="Next Lead">›</button>
-          </div>
-        </div>
-
-        <div id="cockpitEmpty" class="cockpit-empty">
-          <div class="empty-monogram">📜</div>
-          <h3>Pipeline Ready</h3>
-          <p>Select a prospect from your queue or import a CSV file to begin dialing and sending pitches.</p>
-          <div class="empty-actions">
-            <label for="csvFileInput" class="btn btn-primary">📥 Import CSV</label>
-            <button id="btnEmptyNewLead" class="btn btn-vellum" type="button">+ Add Lead</button>
-          </div>
-        </div>
-
-        <!-- SCROLLABLE COCKPIT BODY -->
-        <div id="cockpitContent" class="cockpit-scroll hidden">
-          <div class="cockpit-inner">
-
-            <!-- ONBOARDED BANNER (SHOWN IF VIEWING AN ONBOARDED RECORD FROM 'ALL' TAB) -->
-            <div id="onboardedCockpitBanner" class="paper-card onboarded-jump-banner hidden">
-              <div>
-                <strong>🏆 Onboarded Business</strong>
-                <span>View full company profile, logo, primary/secondary contacts &amp; team cards.</span>
-              </div>
-              <button id="btnJumpToBusinessProfile" class="btn btn-emerald" type="button">Open Business Profile →</button>
+        <!-- QUEUE RAIL -->
+        <aside class="pane pane-list" id="paneList">
+          <div class="list-sticky-top">
+            <div class="segmented-control" role="tablist" aria-label="Pipeline Stages">
+              <button class="filter-btn active" data-stage="prospects" role="tab" type="button">
+                <span>Prospects</span>
+                <span class="badge" id="countProspects">0</span>
+              </button>
+              <button class="filter-btn" data-stage="followup" role="tab" type="button">
+                <span>Follow-Up</span>
+                <span class="badge badge-blue" id="countFollowup">0</span>
+              </button>
+              <button class="filter-btn" data-stage="emailed" role="tab" type="button">
+                <span>Emailed</span>
+                <span class="badge badge-green" id="countEmailed">0</span>
+              </button>
+              <button class="filter-btn" data-stage="onboarded" role="tab" type="button">
+                <span>Onboarded</span>
+                <span class="badge badge-gold" id="countOnboarded">0</span>
+              </button>
+              <button class="filter-btn" data-stage="all" role="tab" type="button">
+                <span>All</span>
+                <span class="badge" id="countAll">0</span>
+              </button>
             </div>
 
-            <!-- HERO CONTACT & DIRECT DIAL CARD -->
-            <div class="paper-card lead-hero-card">
-              <div class="hero-top-row">
-                <div class="lead-badges">
-                  <span id="leadStageBadge" class="stage-pill">Prospect</span>
-                  <span id="leadAttemptsBadge" class="meta-pill hidden">0 attempts</span>
-                  <span id="leadCallbackBadge" class="meta-pill meta-pill-cb hidden"></span>
-                </div>
-                <div class="hero-top-actions">
-                  <button id="btnEditLead" class="btn-chip" type="button">✏️ Edit</button>
-                  <button id="btnMobileDeleteLead" class="btn-chip btn-chip-danger mobile-only-inline" type="button" aria-label="Remove Lead">🗑️</button>
-                </div>
-              </div>
-
-              <div class="lead-identity">
-                <h1 id="leadCompany">Company Name</h1>
-                <div class="lead-subtitle" id="leadSubtitle">Contact Name • Job Title</div>
-                <div class="lead-address" id="leadAddress"></div>
-              </div>
-
-              <div class="lead-call-zone">
-                <div class="call-action-row">
-                  <a id="btnCallLead" href="#" class="btn-call-trigger" title="Dial Phone Number (C)">
-                    <span class="call-icon" aria-hidden="true">📞</span>
-                    <div class="call-meta">
-                      <span class="call-action-label">TAP TO DIAL</span>
-                      <span class="call-phone-number" id="leadPhone">—</span>
-                    </div>
-                  </a>
-                  <button id="btnCopyPhone" class="btn-copy-square" type="button" title="Copy Phone Number" aria-label="Copy phone number">📋</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- DUAL OUTREACH DECK: PIXAR PITCH & PROSPECTING EMAIL -->
-            <div class="outreach-grid">
-
-              <!-- 1. WEBSITE PIXAR PITCH -->
-              <div class="paper-card outreach-card">
-                <div class="outreach-head">
-                  <div class="outreach-title-block">
-                    <span class="eyebrow">STEP 1 • WEBSITE FORM</span>
-                    <h3>Pixar Pitch</h3>
-                    <div class="outreach-target-inline" id="leadFormUrlDisplay">—</div>
-                  </div>
-                  <div class="outreach-head-right">
-                    <button id="btnTogglePixarPreview" class="btn-preview-toggle" type="button" aria-expanded="false">👁 Preview</button>
-                    <span id="pixarStatusTag" class="status-tag">Ready</span>
-                  </div>
-                </div>
-
-                <button id="btnSendPixar" class="btn btn-gold btn-block btn-hero-action" type="button">
-                  🚀 Copy Pitch &amp; Open Form ↗
-                </button>
-
-                <div class="quick-copy-strip" aria-label="Quick Copy Form Details">
-                  <span class="quick-copy-label">Copy:</span>
-                  <button class="btn-copy-pill" data-copy="pitch" type="button">Full Pitch</button>
-                  <button class="btn-copy-pill" data-copy="senderName" type="button">My Name</button>
-                  <button class="btn-copy-pill" data-copy="senderEmail" type="button">My Email</button>
-                  <button class="btn-copy-pill" data-copy="senderPhone" type="button">My Phone</button>
-                  <button class="btn-copy-pill" data-copy="formSubject" type="button">Subject</button>
-                </div>
-
-                <div id="pixarPreviewDrawer" class="pitch-preview-drawer hidden">
-                  <div class="preview-meta-row">
-                    <span id="pixarCharCount" class="preview-char-count"></span>
-                  </div>
-                  <pre id="pixarPreviewBox" class="pitch-preview-text"></pre>
-                </div>
-              </div>
-
-              <!-- 2. PROSPECTING EMAIL -->
-              <div class="paper-card outreach-card">
-                <div class="outreach-head">
-                  <div class="outreach-title-block">
-                    <span class="eyebrow">STEP 2 • DIRECT EMAIL</span>
-                    <h3>Prospecting Email</h3>
-                    <div class="outreach-target-inline" id="leadEmailDisplay">—</div>
-                  </div>
-                  <div class="outreach-head-right">
-                    <button id="btnToggleEmailPreview" class="btn-preview-toggle" type="button" aria-expanded="false">👁 Preview</button>
-                    <span id="emailStatusTag" class="status-tag">Ready</span>
-                  </div>
-                </div>
-
-                <a id="btnSendEmail" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-block btn-hero-action">
-                  ✉️ Open Prospecting Email ↗
-                </a>
-
-                <div class="quick-copy-strip" aria-label="Quick Copy Email Details">
-                  <span class="quick-copy-label">Copy:</span>
-                  <button class="btn-copy-pill" data-copy="leadEmail" type="button">Recipient</button>
-                  <button class="btn-copy-pill" data-copy="emailSubject" type="button">Subject</button>
-                  <button class="btn-copy-pill" data-copy="emailBody" type="button">Body</button>
-                  <button class="btn-copy-pill" data-copy="demoUrl" type="button">Demo Link</button>
-                </div>
-
-                <div id="emailPreviewDrawer" class="pitch-preview-drawer hidden">
-                  <div class="email-preview-subject"><strong>Subj:</strong> <span id="emailSubjectPreview"></span></div>
-                  <pre id="emailPreviewBox" class="pitch-preview-text"></pre>
-                </div>
-              </div>
-            </div>
-
-            <!-- SCRATCHPAD & FIELD NOTES -->
-            <div class="paper-card notes-card">
-              <div class="notes-header">
-                <span class="notes-title">CALL SCRATCHPAD &amp; FIELD NOTES</span>
-                <span id="notesSaveIndicator" class="save-indicator">Saved</span>
-              </div>
-              <textarea id="leadNotes" rows="2" placeholder="Record gatekeepers, training challenges, and next steps..."></textarea>
-            </div>
-
-            <!-- DISPOSITION DECK (DESKTOP INLINE / MOBILE PINNED DOCK) -->
-            <div class="disposition-dock" id="dispositionDock">
-              <div class="disposition-grid">
-                <button class="disp-btn btn-pixar" id="btnDispPartial" type="button">
-                  <span class="disp-ico">🧩</span>
-                  <span class="disp-label">Pixar Sent</span>
-                  <span class="disp-hint">Partial (P)</span>
-                </button>
-                <button class="disp-btn btn-complete" id="btnDispComplete" type="button">
-                  <span class="disp-ico">✅</span>
-                  <span class="disp-label">Emailed</span>
-                  <span class="disp-hint">Emailed (E)</span>
-                </button>
-                <button class="disp-btn btn-na" id="btnDispNA" type="button">
-                  <span class="disp-ico">🔕</span>
-                  <span class="disp-label">No Ans</span>
-                  <span class="disp-hint">Follow-Up (N)</span>
-                </button>
-                <button class="disp-btn btn-cb" id="btnDispCB" type="button">
-                  <span class="disp-ico">📅</span>
-                  <span class="disp-label">Call Back</span>
-                  <span class="disp-hint">Follow-Up</span>
-                </button>
-                <button class="disp-btn btn-onboard" id="btnDispOnboard" type="button">
-                  <span class="disp-ico">🏆</span>
-                  <span class="disp-label">Onboard</span>
-                  <span class="disp-hint">Profile (O)</span>
-                </button>
-                <button class="disp-btn btn-del desktop-only-disp" id="btnDispDelete" type="button">
-                  <span class="disp-ico">🗑️</span>
-                  <span class="disp-label">Remove</span>
-                  <span class="disp-hint">Delete</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- PANE 3: ONBOARDED BUSINESS PROFILES WORKSPACE -->
-      <section class="pane pane-onboarded hidden" id="paneOnboarded" aria-label="Onboarded Business Profiles">
-
-        <!-- VIEW A: PROFILE CARDS DIRECTORY -->
-        <div id="onboardedDirectory" class="onboarded-directory">
-          <div class="onboarded-dir-header">
-            <div class="dir-title-block">
-              <div class="dir-eyebrow-row">
-                <span class="eyebrow">CLIENT ACCOUNTS</span>
-                <span class="badge badge-emerald" id="onboardedDirCount">0</span>
-              </div>
-              <h2>Onboarded Businesses</h2>
-              <p>Select any business card to expand its full profile, website logo, and team directory.</p>
-            </div>
-            <div class="dir-actions">
-              <div class="search-wrap dir-search-wrap">
-                <span class="search-glyph" aria-hidden="true">⌕</span>
-                <input type="search" id="inputOnboardedSearch" placeholder="Search businesses, contacts, cities..." autocomplete="off">
-                <button id="btnClearOnboardedSearch" class="search-clear-btn hidden" type="button" aria-label="Clear onboarded search">✕</button>
-              </div>
-              <button id="btnNewOnboarded" class="btn btn-emerald" type="button">＋ New Business Profile</button>
+            <div class="search-wrap" id="listSearchWrap">
+              <svg class="search-glyph" viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <input type="search" id="inputSearch" placeholder="Search company, name, city, phone..." autocomplete="off">
+              <button id="btnClearSearch" class="search-clear-btn hidden" type="button" aria-label="Clear search">✕</button>
             </div>
           </div>
 
-          <div id="onboardedGrid" class="onboarded-grid"></div>
-        </div>
+          <div class="contact-list" id="contactList" role="list"></div>
+        </aside>
 
-        <!-- VIEW B: EXPANDED FULL BUSINESS PROFILE PAGE -->
-        <div id="onboardedProfileView" class="onboarded-profile-view hidden">
-          <div class="profile-sticky-nav">
-            <button id="btnBackToOnboardedDir" class="nav-back-btn" type="button">
-              <span class="nav-chevron">‹</span>
-              <span>Onboarded</span>
+        <!-- ACTIVE LEAD COCKPIT & INLINE ADMIN DESK -->
+        <section class="pane pane-cockpit" id="paneCockpit" aria-label="Active Contact Desk">
+
+          <!-- Mobile Sticky Top Bar -->
+          <div class="mobile-cockpit-nav">
+            <button id="btnBackToList" class="nav-back-btn" type="button">
+              <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden="true">
+                <path d="M12.5 5L7.5 10L12.5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Queue</span>
             </button>
 
-            <div class="profile-nav-center">
-              <span id="onboardedNavTitle" class="nav-title">Business Profile</span>
-              <span id="onboardedSaveIndicator" class="profile-save-pill">Saved ✓</span>
+            <div class="nav-center-meta">
+              <span id="mobileNavTitle" class="nav-title">Contact</span>
+              <span id="mobileQueueCounter" class="nav-counter">0 / 0</span>
             </div>
 
-            <div class="profile-nav-actions">
-              <select id="onboardedStageSelect" class="stage-mini-select" aria-label="Account Pipeline Stage">
-                <option value="onboarded">🏆 Onboarded</option>
-                <option value="prospects">📋 Prospects</option>
-                <option value="followup">📅 Follow-Up</option>
-                <option value="partial">🧩 Partial</option>
-                <option value="completed">✅ Emailed</option>
-              </select>
-              <div class="nav-stepper">
-                <button id="btnPrevOnboarded" class="stepper-btn" type="button" aria-label="Previous Profile">‹</button>
-                <button id="btnNextOnboarded" class="stepper-btn" type="button" aria-label="Next Profile">›</button>
-              </div>
-              <button id="btnDeleteOnboarded" class="btn-chip btn-chip-danger" type="button" title="Delete Business Profile">🗑️</button>
+            <div class="nav-stepper">
+              <button id="btnPrevLead" class="stepper-btn" type="button" aria-label="Previous Lead">‹</button>
+              <button id="btnNextLead" class="stepper-btn" type="button" aria-label="Next Lead">›</button>
             </div>
           </div>
 
-          <div class="profile-scroll" id="profileScroll">
-            <div class="profile-inner">
+          <!-- Empty State -->
+          <div id="cockpitEmpty" class="cockpit-empty">
+            <div class="empty-monogram" aria-hidden="true">
+              <svg viewBox="0 0 32 32" width="38" height="38" fill="none">
+                <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.1"/>
+                <path d="M16 24V12M16 17.5C13.6 15.8 11.8 14 10.8 11.6M16 15.2C18.4 13.8 20.1 12.1 21.3 9.8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                <circle cx="16" cy="9.2" r="1.9" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3>Your Dialer Desk is Ready</h3>
+            <p>Select a contact from the queue, import a CSV list, or load sample leads to test the workflow.</p>
+            <div class="empty-actions">
+              <label for="csvFileInput" class="btn btn-primary">Import CSV</label>
+              <button id="btnEmptyNewLead" class="btn btn-vellum" type="button">+ Add Lead</button>
+              <button id="btnLoadDemoLeads" class="btn btn-vellum" type="button">Sample Leads</button>
+            </div>
+          </div>
 
-              <!-- MAIN BUSINESS OVERVIEW CARD -->
-              <div class="paper-card business-profile-card">
-                <div class="business-hero-row">
-                  <div class="business-logo-studio">
-                    <div class="business-logo-frame" id="profLogoFrame">
-                      <img id="profLogoImg" class="hidden" alt="Business Logo">
-                      <span id="profLogoFallback" class="logo-monogram">FD</span>
-                    </div>
-                    <div class="logo-controls">
-                      <label for="profLogoUploadInput" class="btn-chip">📷 Upload</label>
-                      <input type="file" id="profLogoUploadInput" accept="image/*" hidden>
-                      <button id="btnEditLogoUrl" class="btn-chip" type="button">🔗 URL</button>
-                      <button id="btnRefreshLogo" class="btn-chip" type="button" title="Reset to Website Logo">↻</button>
-                    </div>
-                  </div>
+          <!-- Scrollable Cockpit Body -->
+          <div id="cockpitContent" class="cockpit-scroll hidden">
+            <div class="cockpit-inner">
 
-                  <div class="business-core-fields">
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label for="profCompany">Business / Venue Name *</label>
-                        <input type="text" id="profCompany" placeholder="e.g. Library Bar">
-                      </div>
-                      <div class="form-group">
-                        <label for="profOnboardedDate">Onboarded Date</label>
-                        <input type="date" id="profOnboardedDate">
-                      </div>
-                    </div>
-
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label for="profBusinessType">Venue Type / Category</label>
-                        <input type="text" id="profBusinessType" placeholder="e.g. Cocktail Bar, Hotel, Restaurant">
-                      </div>
-                      <div class="form-group">
-                        <label for="profAccountStatus">Account Status</label>
-                        <select id="profAccountStatus">
-                          <option value="active">🟢 Active Client</option>
-                          <option value="onboarding">🟡 Setup / Onboarding</option>
-                          <option value="vip">⭐ VIP Partner</option>
-                          <option value="paused">⏸ Paused</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="profile-divider"></div>
-
-                <!-- BUSINESS CHANNELS & LOCATION -->
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="profWebsite">Business Website (Auto-fetches Logo)</label>
-                    <div class="input-with-action">
-                      <input type="url" id="profWebsite" placeholder="https://example.com">
-                      <a id="btnOpenProfWebsite" href="#" target="_blank" rel="noopener noreferrer" class="btn-input-action" title="Open Website">↗</a>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="profAppUrl">Pocket App / Demo Link</label>
-                    <div class="input-with-action">
-                      <input type="url" id="profAppUrl" placeholder="https://...">
-                      <a id="btnOpenProfAppUrl" href="#" target="_blank" rel="noopener noreferrer" class="btn-input-action" title="Open App">↗</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="profEmail">Main Business Email</label>
-                    <div class="input-with-action">
-                      <input type="email" id="profEmail" placeholder="hello@venue.com">
-                      <a id="btnEmailProf" href="#" class="btn-input-action" title="Email Business">✉️</a>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="profPhone">Main Business Phone</label>
-                    <div class="input-with-action">
-                      <input type="tel" id="profPhone" placeholder="+1 (555) 000-0000">
-                      <a id="btnCallProf" href="#" class="btn-input-action" title="Call Business">📞</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="profFormUrl">Contact / Support Page URL</label>
-                    <div class="input-with-action">
-                      <input type="url" id="profFormUrl" placeholder="https://example.com/contact">
-                      <a id="btnOpenProfFormUrl" href="#" target="_blank" rel="noopener noreferrer" class="btn-input-action" title="Open Link">↗</a>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="profAddress">Street Address</label>
-                    <input type="text" id="profAddress" placeholder="100 Front St W">
-                  </div>
-                </div>
-
-                <div class="form-row form-row-3">
-                  <div class="form-group">
-                    <label for="profCity">City</label>
-                    <input type="text" id="profCity" placeholder="Toronto">
-                  </div>
-                  <div class="form-group">
-                    <label for="profPostal">Postal / ZIP Code</label>
-                    <input type="text" id="profPostal" placeholder="M5J 1E3">
-                  </div>
-                  <div class="form-group">
-                    <label for="profCountry">Country</label>
-                    <input type="text" id="profCountry" placeholder="Canada">
-                  </div>
-                </div>
-
-                <div class="form-group" style="margin-bottom:0;">
-                  <label for="profNotes">Business Notes &amp; Account Overview</label>
-                  <textarea id="profNotes" rows="3" placeholder="Menu cycles, cocktail spec priorities, onboarding milestones, billing notes, venue quirks..."></textarea>
-                </div>
-              </div>
-
-              <!-- TEAM & EMPLOYEE CARDS SECTION -->
-              <div class="team-section-header">
+              <!-- Onboarded Jump Banner -->
+              <div id="onboardedCockpitBanner" class="paper-card onboarded-jump-banner hidden">
                 <div>
-                  <span class="eyebrow">TEAM DIRECTORY</span>
-                  <h3>Contacts &amp; Employees <span class="badge" id="employeeCountBadge">2</span></h3>
+                  <strong>Onboarded Client Account</strong>
+                  <span>Open the full business profile, logo, and team directory.</span>
                 </div>
-                <button id="btnAddEmployee" class="btn btn-primary" type="button">＋ Add Employee Card</button>
+                <button id="btnJumpToBusinessProfile" class="btn btn-gold" type="button">Open Profile</button>
               </div>
 
-              <div id="employeeCardsList" class="employee-cards-list"></div>
+              <!-- CORE CONTACT & ADMIN DETAILS CARD -->
+              <div class="paper-card lead-hero-card">
+                <div class="hero-top-row">
+                  <div class="lead-badges">
+                    <select id="leadStageSelect" class="stage-inline-select" aria-label="Pipeline Stage">
+                      <option value="prospects">Prospects</option>
+                      <option value="followup">Follow-Up</option>
+                      <option value="emailed">Emailed</option>
+                      <option value="onboarded">Onboarded</option>
+                    </select>
+                    <span id="leadAttemptsBadge" class="meta-pill hidden">0 attempts</span>
+                    <span id="leadCallbackBadge" class="meta-pill meta-pill-cb hidden"></span>
+                  </div>
+
+                  <div class="hero-top-actions">
+                    <span id="cockpitSavePill" class="save-pill">Saved</span>
+                    <button id="btnToggleInlineEdit" class="btn-chip" type="button" aria-expanded="false">Edit Details</button>
+                    <button id="btnDeleteLeadMobile" class="btn-chip btn-chip-danger mobile-only-inline" type="button" aria-label="Remove Lead">Delete</button>
+                  </div>
+                </div>
+
+                <div class="lead-identity">
+                  <h1 id="leadCompanyDisplay">Company Name</h1>
+                  <div class="lead-subtitle" id="leadSubtitleDisplay">Contact Name · Job Title</div>
+                  <div class="lead-admin-summary" id="leadAdminSummary"></div>
+                </div>
+
+                <!-- PRIMARY 3 CORE ACTIONS: CALL (tel:), EMAIL (mailto: pre-filled), WEBSITE -->
+                <div class="core-actions-grid">
+                  <!-- 1. CALL -->
+                  <div class="action-tile action-tile--call">
+                    <a id="btnCallLead" href="#" class="tile-main-link" title="Dial Phone Number (C)">
+                      <span class="tile-eyebrow">
+                        <svg viewBox="0 0 16 16" width="11" height="11" fill="none" aria-hidden="true">
+                          <path d="M3.5 2.5H6L7.2 5.5L5.6 6.7C6.4 8.2 7.8 9.6 9.3 10.4L10.5 8.8L13.5 10V12.5C13.5 13.1 13 13.5 12.4 13.5C7.2 13.2 2.8 8.8 2.5 3.6C2.5 3 2.9 2.5 3.5 2.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+                        </svg>
+                        TAP TO CALL
+                      </span>
+                      <span class="tile-value" id="leadPhoneDisplay">No phone</span>
+                    </a>
+                    <button id="btnCopyPhone" class="tile-copy-btn" type="button" title="Copy Phone Number" aria-label="Copy phone number">Copy</button>
+                  </div>
+
+                  <!-- 2. SEND EMAIL -->
+                  <div class="action-tile action-tile--email">
+                    <a id="btnSendEmail" href="#" class="tile-main-link" title="Open Mail App with Pre-filled Message (E)">
+                      <span class="tile-eyebrow">
+                        <svg viewBox="0 0 16 16" width="11" height="11" fill="none" aria-hidden="true">
+                          <rect x="2" y="3.5" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+                          <path d="M2.5 4.5L8 8.5L13.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                        </svg>
+                        SEND EMAIL
+                      </span>
+                      <span class="tile-value" id="leadEmailDisplay">No email</span>
+                    </a>
+                    <div class="tile-side-btns">
+                      <button id="btnToggleEmailPreview" class="tile-copy-btn" type="button" aria-expanded="false" title="Preview Email">Preview</button>
+                      <button id="btnCopyEmail" class="tile-copy-btn" type="button" title="Copy Email Address" aria-label="Copy email address">Copy</button>
+                    </div>
+                  </div>
+
+                  <!-- 3. VISIT WEBSITE -->
+                  <div class="action-tile action-tile--web">
+                    <a id="btnVisitWebsite" href="#" target="_blank" rel="noopener noreferrer" class="tile-main-link" title="Visit Website">
+                      <span class="tile-eyebrow">
+                        <svg viewBox="0 0 16 16" width="11" height="11" fill="none" aria-hidden="true">
+                          <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+                          <path d="M2.8 8H13.2M8 2.5C9.5 4.2 10.2 6.1 10.2 8C10.2 9.9 9.5 11.8 8 13.5C6.5 11.8 5.8 9.9 5.8 8C5.8 6.1 6.5 4.2 8 2.5Z" stroke="currentColor" stroke-width="1.1"/>
+                        </svg>
+                        WEBSITE
+                      </span>
+                      <span class="tile-value" id="leadWebsiteDisplay">No website</span>
+                    </a>
+                    <button id="btnCopyWebsite" class="tile-copy-btn" type="button" title="Copy Website URL" aria-label="Copy website URL">Copy</button>
+                  </div>
+                </div>
+
+                <!-- Email Template Preview Drawer -->
+                <div id="emailPreviewDrawer" class="email-preview-drawer hidden">
+                  <div class="email-preview-head">
+                    <span><strong>Subject:</strong> <span id="emailSubjectPreview"></span></span>
+                    <div class="preview-copy-btns">
+                      <button id="btnCopyEmailSubj" class="btn-chip" type="button">Copy Subject</button>
+                      <button id="btnCopyEmailBody" class="btn-chip" type="button">Copy Body</button>
+                    </div>
+                  </div>
+                  <pre id="emailPreviewBox" class="email-preview-body"></pre>
+                </div>
+
+                <!-- INLINE ADMIN EDITOR (1-Tap Live Editing of All Core Details) -->
+                <div id="inlineEditPanel" class="inline-edit-panel hidden">
+                  <div class="inline-edit-header">
+                    <span>Admin Details (Auto-Saves)</span>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editCompany">Company / Business Name</label>
+                      <input type="text" id="editCompany" placeholder="Business name">
+                    </div>
+                    <div class="form-group">
+                      <label for="editName">Primary Contact Name</label>
+                      <input type="text" id="editName" placeholder="Full name">
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editTitle">Job Title / Role</label>
+                      <input type="text" id="editTitle" placeholder="e.g. General Manager">
+                    </div>
+                    <div class="form-group">
+                      <label for="editPhone">Phone Number</label>
+                      <input type="tel" id="editPhone" placeholder="+1 555 000 0000">
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editEmail">Email Address</label>
+                      <input type="email" id="editEmail" placeholder="name@company.com">
+                    </div>
+                    <div class="form-group">
+                      <label for="editWebsite">Website URL</label>
+                      <input type="url" id="editWebsite" placeholder="https://company.com">
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editAddress">Street Address</label>
+                      <input type="text" id="editAddress" placeholder="Street address">
+                    </div>
+                    <div class="form-group">
+                      <label for="editCity">City</label>
+                      <input type="text" id="editCity" placeholder="City">
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editPostal">Postal / ZIP Code</label>
+                      <input type="text" id="editPostal" placeholder="Postal code">
+                    </div>
+                    <div class="form-group">
+                      <label for="editCountry">Country</label>
+                      <input type="text" id="editCountry" placeholder="Country">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CALL NOTES & ADMIN SCRATCHPAD -->
+              <div class="paper-card notes-card">
+                <div class="notes-header">
+                  <span class="notes-title">CALL NOTES &amp; ADMIN DETAILS</span>
+                  <span id="notesSaveIndicator" class="save-indicator">Saved</span>
+                </div>
+                <textarea id="leadNotes" rows="3" placeholder="Record gatekeeper names, conversation details, and next steps..."></textarea>
+              </div>
+
+              <!-- DISPOSITION BAR (Desktop Inline / Mobile Pinned Thumb Dock) -->
+              <div class="disposition-dock" id="dispositionDock">
+                <div class="disposition-grid">
+                  <button class="disp-btn btn-complete" id="btnDispEmailed" type="button">
+                    <span class="disp-label">Emailed</span>
+                    <span class="disp-hint">Key: E</span>
+                  </button>
+                  <button class="disp-btn btn-na" id="btnDispNA" type="button">
+                    <span class="disp-label">No Answer</span>
+                    <span class="disp-hint">Key: N</span>
+                  </button>
+                  <button class="disp-btn btn-cb" id="btnDispCB" type="button">
+                    <span class="disp-label">Call Back</span>
+                    <span class="disp-hint">Schedule</span>
+                  </button>
+                  <button class="disp-btn btn-onboard" id="btnDispOnboard" type="button">
+                    <span class="disp-label">Onboard</span>
+                    <span class="disp-hint">Key: O</span>
+                  </button>
+                  <button class="disp-btn btn-del desktop-only-disp" id="btnDispDelete" type="button">
+                    <span class="disp-label">Remove</span>
+                    <span class="disp-hint">Delete</span>
+                  </button>
+                </div>
+              </div>
 
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <!-- ONBOARDED CLIENT ACCOUNTS WORKSPACE -->
+        <section class="pane pane-onboarded hidden" id="paneOnboarded" aria-label="Onboarded Business Profiles">
+
+          <!-- Directory View -->
+          <div id="onboardedDirectory" class="onboarded-directory">
+            <div class="onboarded-dir-header">
+              <div class="dir-title-block">
+                <div class="dir-eyebrow-row">
+                  <span class="eyebrow">CLIENT ACCOUNTS</span>
+                  <span class="badge badge-gold" id="onboardedDirCount">0</span>
+                </div>
+                <h2>Onboarded Businesses</h2>
+                <p>Tap any business card to manage company details, logo, website, and team contacts.</p>
+              </div>
+              <div class="dir-actions">
+                <div class="search-wrap dir-search-wrap">
+                  <svg class="search-glyph" viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true">
+                    <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  </svg>
+                  <input type="search" id="inputOnboardedSearch" placeholder="Search businesses, contacts, cities..." autocomplete="off">
+                  <button id="btnClearOnboardedSearch" class="search-clear-btn hidden" type="button" aria-label="Clear onboarded search">✕</button>
+                </div>
+                <button id="btnNewOnboarded" class="btn btn-gold" type="button">+ New Business</button>
+              </div>
+            </div>
+
+            <div id="onboardedGrid" class="onboarded-grid"></div>
+          </div>
+
+          <!-- Full Business Profile View -->
+          <div id="onboardedProfileView" class="onboarded-profile-view hidden">
+            <div class="profile-sticky-nav">
+              <button id="btnBackToOnboardedDir" class="nav-back-btn" type="button">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden="true">
+                  <path d="M12.5 5L7.5 10L12.5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Onboarded</span>
+              </button>
+
+              <div class="profile-nav-center">
+                <span id="onboardedNavTitle" class="nav-title">Business Profile</span>
+                <span id="onboardedSaveIndicator" class="save-pill">Saved</span>
+              </div>
+
+              <div class="profile-nav-actions">
+                <select id="onboardedStageSelect" class="stage-inline-select" aria-label="Account Pipeline Stage">
+                  <option value="onboarded">Onboarded</option>
+                  <option value="prospects">Prospects</option>
+                  <option value="followup">Follow-Up</option>
+                  <option value="emailed">Emailed</option>
+                </select>
+                <div class="nav-stepper">
+                  <button id="btnPrevOnboarded" class="stepper-btn" type="button" aria-label="Previous Profile">‹</button>
+                  <button id="btnNextOnboarded" class="stepper-btn" type="button" aria-label="Next Profile">›</button>
+                </div>
+                <button id="btnDeleteOnboarded" class="btn-chip btn-chip-danger" type="button" title="Delete Business Profile">Delete</button>
+              </div>
+            </div>
+
+            <div class="profile-scroll" id="profileScroll">
+              <div class="profile-inner">
+                <div class="paper-card business-profile-card">
+                  <div class="business-hero-row">
+                    <div class="business-logo-studio">
+                      <div class="business-logo-frame" id="profLogoFrame">
+                        <img id="profLogoImg" class="hidden" alt="Business Logo">
+                        <span id="profLogoFallback" class="logo-monogram">DC</span>
+                      </div>
+                      <div class="logo-controls">
+                        <label for="profLogoUploadInput" class="btn-chip">Upload</label>
+                        <input type="file" id="profLogoUploadInput" accept="image/*" hidden>
+                        <button id="btnEditLogoUrl" class="btn-chip" type="button">URL</button>
+                        <button id="btnRefreshLogo" class="btn-chip" type="button" title="Reset to Website Logo">Reset</button>
+                      </div>
+                    </div>
+
+                    <div class="business-core-fields">
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label for="profCompany">Business Name *</label>
+                          <input type="text" id="profCompany" placeholder="e.g. Library Bar">
+                        </div>
+                        <div class="form-group">
+                          <label for="profOnboardedDate">Onboarded Date</label>
+                          <input type="date" id="profOnboardedDate">
+                        </div>
+                      </div>
+
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label for="profBusinessType">Business Type</label>
+                          <input type="text" id="profBusinessType" placeholder="e.g. Cocktail Bar, Hotel, Retail">
+                        </div>
+                        <div class="form-group">
+                          <label for="profAccountStatus">Account Status</label>
+                          <select id="profAccountStatus">
+                            <option value="active">Active Client</option>
+                            <option value="onboarding">Setup / Onboarding</option>
+                            <option value="vip">VIP Partner</option>
+                            <option value="paused">Paused</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="profile-divider"></div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="profWebsite">Business Website</label>
+                      <div class="input-with-action">
+                        <input type="url" id="profWebsite" placeholder="https://example.com">
+                        <a id="btnOpenProfWebsite" href="#" target="_blank" rel="noopener noreferrer" class="btn-input-action" title="Open Website">↗</a>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="profAppUrl">Portal / Demo Link</label>
+                      <div class="input-with-action">
+                        <input type="url" id="profAppUrl" placeholder="https://...">
+                        <a id="btnOpenProfAppUrl" href="#" target="_blank" rel="noopener noreferrer" class="btn-input-action" title="Open Portal">↗</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="profEmail">Main Email (Opens Pre-filled Mail)</label>
+                      <div class="input-with-action">
+                        <input type="email" id="profEmail" placeholder="hello@company.com">
+                        <a id="btnEmailProf" href="#" class="btn-input-action" title="Email Business">✉</a>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="profPhone">Main Phone (Opens Phone Dialer)</label>
+                      <div class="input-with-action">
+                        <input type="tel" id="profPhone" placeholder="+1 555 000 0000">
+                        <a id="btnCallProf" href="#" class="btn-input-action" title="Call Business">☎</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="profAddress">Street Address</label>
+                      <input type="text" id="profAddress" placeholder="100 Front St W">
+                    </div>
+                    <div class="form-group">
+                      <label for="profCity">City</label>
+                      <input type="text" id="profCity" placeholder="Toronto">
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="profPostal">Postal / ZIP Code</label>
+                      <input type="text" id="profPostal" placeholder="M5J 1E3">
+                    </div>
+                    <div class="form-group">
+                      <label for="profCountry">Country</label>
+                      <input type="text" id="profCountry" placeholder="Canada">
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label for="profNotes">Account Notes &amp; Admin Overview</label>
+                    <textarea id="profNotes" rows="3" placeholder="Billing notes, onboarding milestones, key priorities..."></textarea>
+                  </div>
+                </div>
+
+                <div class="team-section-header">
+                  <div>
+                    <span class="eyebrow">TEAM DIRECTORY</span>
+                    <h3>Contacts &amp; Employees <span class="badge" id="employeeCountBadge">2</span></h3>
+                  </div>
+                  <button id="btnAddEmployee" class="btn btn-primary" type="button">+ Add Employee</button>
+                </div>
+
+                <div id="employeeCardsList" class="employee-cards-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
     </main>
   </div>
 
   <!-- TOAST BANNER -->
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <!-- MODAL: ADD / EDIT PROSPECT -->
+  <!-- MODAL: ADD NEW LEAD -->
   <dialog id="dialogLeadForm" class="modal-dialog">
     <form id="leadForm" method="dialog" class="dialog-inner sheet-shell">
       <div class="sheet-grabber" aria-hidden="true"></div>
@@ -510,16 +635,15 @@
       <div class="sheet-body">
         <div class="form-row">
           <div class="form-group">
-            <label for="formCompany">Company / Venue Name *</label>
+            <label for="formCompany">Company / Business Name *</label>
             <input type="text" id="formCompany" required>
           </div>
           <div class="form-group">
             <label for="formStage">Pipeline Stage</label>
             <select id="formStage">
-              <option value="prospects">Prospects (New)</option>
-              <option value="followup">Follow-Up (No Ans / CB)</option>
-              <option value="partial">Partial (Pixar Sent)</option>
-              <option value="completed">Emailed</option>
+              <option value="prospects">Prospects</option>
+              <option value="followup">Follow-Up</option>
+              <option value="emailed">Emailed</option>
               <option value="onboarded">Onboarded</option>
             </select>
           </div>
@@ -549,23 +673,27 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="formWebsite">Website (for Logo &amp; Profile)</label>
+            <label for="formWebsite">Website URL</label>
             <input type="url" id="formWebsite" placeholder="https://example.com">
           </div>
-          <div class="form-group">
-            <label for="formContactUrl">Website Contact Form URL</label>
-            <input type="url" id="formContactUrl" placeholder="https://example.com/contact">
-          </div>
-        </div>
-
-        <div class="form-row">
           <div class="form-group">
             <label for="formAddress">Street Address</label>
             <input type="text" id="formAddress">
           </div>
+        </div>
+
+        <div class="form-row form-row-3">
           <div class="form-group">
             <label for="formCity">City</label>
             <input type="text" id="formCity">
+          </div>
+          <div class="form-group">
+            <label for="formPostal">Postal Code</label>
+            <input type="text" id="formPostal">
+          </div>
+          <div class="form-group">
+            <label for="formCountry">Country</label>
+            <input type="text" id="formCountry">
           </div>
         </div>
 
@@ -576,7 +704,7 @@
       </div>
 
       <div class="dialog-actions sheet-footer sheet-footer-split">
-        <button type="button" id="btnDeleteFromModal" class="btn btn-danger-outline hidden">🗑️ Delete</button>
+        <button type="button" id="btnDeleteFromModal" class="btn btn-danger-outline hidden">Delete</button>
         <div class="footer-right-btns">
           <button type="button" id="btnCancelForm" class="btn btn-vellum">Cancel</button>
           <button type="submit" class="btn btn-primary">Save Lead</button>
@@ -593,13 +721,13 @@
         <h3>Schedule Call Back</h3>
       </div>
       <div class="sheet-body">
-        <p class="dialog-desc">Lead moves out of Prospects into <strong>Follow-Up</strong> with a scheduled reminder badge.</p>
+        <p class="dialog-desc">Lead moves to <strong>Follow-Up</strong> with a scheduled reminder badge.</p>
 
         <div class="callback-pills">
-          <button class="btn btn-vellum" data-cb-hours="2" type="button">⏱ In 2 Hours</button>
-          <button class="btn btn-vellum" data-cb-hours="4" type="button">⏱ In 4 Hours</button>
-          <button class="btn btn-vellum" data-cb-hours="24" type="button">📅 Tomorrow</button>
-          <button class="btn btn-vellum" data-cb-hours="48" type="button">🗓 In 2 Days</button>
+          <button class="btn btn-vellum" data-cb-hours="2" type="button">In 2 Hours</button>
+          <button class="btn btn-vellum" data-cb-hours="4" type="button">In 4 Hours</button>
+          <button class="btn btn-vellum" data-cb-hours="24" type="button">Tomorrow</button>
+          <button class="btn btn-vellum" data-cb-hours="48" type="button">In 2 Days</button>
         </div>
 
         <div class="form-group" style="margin-top: 14px;">
@@ -615,145 +743,58 @@
     </div>
   </dialog>
 
-  <!-- MODAL: EXTENSIVE SETTINGS -->
+  <!-- MODAL: EXPANDED SETTINGS DESK (4 TABS) -->
   <dialog id="dialogSettings" class="modal-dialog modal-lg">
     <div class="dialog-inner settings-shell sheet-shell">
       <div class="sheet-grabber" aria-hidden="true"></div>
       <div class="dialog-header settings-header">
         <div>
-          <h3>Outreach &amp; Auto-Fill Settings</h3>
-          <p class="dialog-sub">Customize your Pixar Pitch spine, email templates, subjects &amp; auto-fill profile.</p>
+          <h3>CRM &amp; Tree Settings</h3>
+          <p class="dialog-sub">Adjust your daily target, email templates, tree layout, and workflow preferences.</p>
         </div>
         <button type="button" id="btnCloseSettingsX" class="btn-icon-close" aria-label="Close">✕</button>
       </div>
 
       <div class="settings-tabs" role="tablist">
-        <button class="settings-tab active" data-stab="sender" type="button">👤 Auto-Fill</button>
-        <button class="settings-tab" data-stab="pixar" type="button">🎬 Pixar Pitch</button>
-        <button class="settings-tab" data-stab="email" type="button">✉️ Email Pitch</button>
-        <button class="settings-tab" data-stab="workflow" type="button">⚙️ Workflow</button>
+        <button class="settings-tab active" data-stab="email" type="button">Sender &amp; Email</button>
+        <button class="settings-tab" data-stab="target" type="button">Daily Target &amp; Tree</button>
+        <button class="settings-tab" data-stab="dialer" type="button">Dialer &amp; UI</button>
+        <button class="settings-tab" data-stab="data" type="button">Data &amp; Backup</button>
       </div>
 
       <div class="settings-body">
-        <!-- TAB 1: AUTO-FILL & SENDER -->
-        <div class="settings-panel active" id="stab-sender">
+        <!-- TAB 1: SENDER & EMAIL -->
+        <div class="settings-panel active" id="stab-email">
           <div class="form-row">
             <div class="form-group">
-              <label for="setSenderName">Your Full Name (Auto-Fill)</label>
+              <label for="setSenderName">Your Name</label>
               <input type="text" id="setSenderName" placeholder="e.g. Christian J.">
             </div>
             <div class="form-group">
-              <label for="setSenderCompany">Your Company / Studio</label>
+              <label for="setSenderCompany">Your Studio / Company</label>
               <input type="text" id="setSenderCompany" placeholder="e.g. Empire Dev Studio">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="setSenderEmail">Your Email Address</label>
-              <input type="email" id="setSenderEmail" placeholder="you@empiredevstudio.com">
+              <label for="setSenderEmail">Your Email</label>
+              <input type="email" id="setSenderEmail" placeholder="empiredevstudio@gmail.com">
             </div>
-            <div class="form-group">
-              <label for="setSenderPhone">Your Phone Number</label>
-              <input type="tel" id="setSenderPhone" placeholder="+44 7700 900000">
-            </div>
-          </div>
-
-          <div class="form-row">
             <div class="form-group">
               <label for="setSenderTitle">Your Role / Title</label>
               <input type="text" id="setSenderTitle" placeholder="Founder">
             </div>
-            <div class="form-group">
-              <label for="setFormSubject">Default Contact Form Subject</label>
-              <input type="text" id="setFormSubject" placeholder="Staff training idea for {{company}}">
-            </div>
-          </div>
-
-          <div class="bookmarklet-box">
-            <div class="bookmarklet-copy">
-              <strong>1-Click External Form Auto-Filler (Bookmarklet)</strong>
-              <p>Browsers prevent one webpage from modifying another domain directly. Save this bookmarklet—tap it on any venue's contact page to fill Name, Email, Phone, Subject &amp; your copied Pixar Pitch. (On mobile, tap <em>Copy Script</em> and paste into a bookmark URL.)</p>
-            </div>
-            <div class="bookmarklet-actions">
-              <a id="bookmarkletLink" class="btn btn-gold" href="#">⚡ Auto-Fill Contact Form</a>
-              <button id="btnCopyBookmarklet" class="btn btn-vellum" type="button">Copy Script</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- TAB 2: PIXAR PITCH BUILDER -->
-        <div class="settings-panel" id="stab-pixar">
-          <div class="var-bar">
-            <span class="var-label">Variables (tap to copy):</span>
-            <button type="button" class="var-chip" data-var="{{company}}">{{company}}</button>
-            <button type="button" class="var-chip" data-var="{{first_name}}">{{first_name}}</button>
-            <button type="button" class="var-chip" data-var="{{name}}">{{name}}</button>
-            <button type="button" class="var-chip" data-var="{{city}}">{{city}}</button>
-            <button type="button" class="var-chip" data-var="{{senderFirstName}}">{{senderFirstName}}</button>
-            <button type="button" class="var-chip" data-var="{{senderName}}">{{senderName}}</button>
-            <button type="button" class="var-chip" data-var="{{senderCompany}}">{{senderCompany}}</button>
-            <button type="button" class="var-chip" data-var="{{senderPhone}}">{{senderPhone}}</button>
-            <button type="button" class="var-chip" data-var="{{senderEmail}}">{{senderEmail}}</button>
           </div>
 
           <div class="form-group">
-            <label for="setPixarIntro">0. Intro (Who you are, thank you &amp; transparent Pixar Pitch hook)</label>
-            <textarea id="setPixarIntro" rows="3"></textarea>
-          </div>
-
-          <div class="pixar-grid">
-            <div class="form-group">
-              <label for="setPixar1">1. Once upon a time…</label>
-              <textarea id="setPixar1" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="setPixar2">2. Every day / The challenge…</label>
-              <textarea id="setPixar2" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="setPixar3">3. One day…</label>
-              <textarea id="setPixar3" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="setPixar4">4. Because of that…</label>
-              <textarea id="setPixar4" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="setPixar5">5. Because of that (Bigger idea)…</label>
-              <textarea id="setPixar5" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="setPixar6">6. Until finally…</label>
-              <textarea id="setPixar6" rows="3"></textarea>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="setPixarExtra">7. Close &amp; Permission-to-Send-Demo CTA (appended after Pixar Pitch)</label>
-            <textarea id="setPixarExtra" rows="4"></textarea>
-          </div>
-
-          <div class="preview-panel">
-            <div class="preview-meta-row">
-              <span class="eyebrow">LIVE PIXAR PITCH PREVIEW</span>
-              <span id="settingsPixarCount" class="preview-char-count"></span>
-            </div>
-            <pre id="settingsPixarPreview" class="pitch-preview-text"></pre>
-          </div>
-        </div>
-
-        <!-- TAB 3: PROSPECTING EMAIL -->
-        <div class="settings-panel" id="stab-email">
-          <div class="form-group">
-            <label for="setEmailProvider">Email Client</label>
+            <label for="setEmailProvider">Email App Preference</label>
             <select id="setEmailProvider">
+              <option value="mailto">Device Mail App (mailto: Pre-filled Subject &amp; Body)</option>
               <option value="gmail">Gmail Web (mail.google.com)</option>
               <option value="outlook">Outlook Web (outlook.live.com)</option>
               <option value="office365">Microsoft 365 Web (outlook.office.com)</option>
-              <option value="mailto">Phone Mail / System App (mailto: — Best on Mobile)</option>
             </select>
-            <span class="field-hint">Tip: Choose <strong>mailto:</strong> on phones to open Apple Mail / Gmail app directly.</span>
           </div>
 
           <div class="var-bar">
@@ -768,47 +809,154 @@
           </div>
 
           <div class="form-group">
-            <label for="setEmailSubject">Prospecting Email Subject</label>
+            <label for="setEmailSubject">Email Subject</label>
             <input type="text" id="setEmailSubject">
           </div>
 
           <div class="form-group">
-            <label for="setEmailBody">Prospecting Email Body</label>
-            <textarea id="setEmailBody" rows="9"></textarea>
+            <label for="setEmailBody">Email Body</label>
+            <textarea id="setEmailBody" rows="6"></textarea>
           </div>
 
           <div class="preview-panel">
             <span class="eyebrow">LIVE EMAIL PREVIEW</span>
             <div class="email-preview-subject"><strong>Subject:</strong> <span id="settingsEmailSubjPreview"></span></div>
-            <pre id="settingsEmailBodyPreview" class="pitch-preview-text"></pre>
+            <pre id="settingsEmailBodyPreview" class="email-preview-body"></pre>
           </div>
         </div>
 
-        <!-- TAB 4: WORKFLOW & DATA -->
-        <div class="settings-panel" id="stab-workflow">
+        <!-- TAB 2: DAILY TARGET & TREE TUNING -->
+        <div class="settings-panel" id="stab-target">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="setDailyTarget">Daily Outreach Target (Grows Tree to 100%)</label>
+              <input type="number" id="setDailyTarget" min="1" max="500" step="1">
+            </div>
+            <div class="form-group">
+              <label for="setOnboardBonus">Onboarded Client Bonus Points</label>
+              <input type="number" id="setOnboardBonus" min="1" max="20" step="1">
+            </div>
+          </div>
+
           <label class="toggle-row">
-            <input type="checkbox" id="setAutoStagePixar">
+            <input type="checkbox" id="setCountCalls">
             <div>
-              <strong>Auto-move to Partial when opening Pixar form</strong>
-              <span>Moves the prospect to the Partial tab right after copying the pitch and opening the contact form.</span>
+              <strong>Count Call Taps toward Daily Target</strong>
+              <span>Adds +1 toward today's tree growth each time you tap Call.</span>
             </div>
           </label>
+
+          <label class="toggle-row">
+            <input type="checkbox" id="setCountEmails">
+            <div>
+              <strong>Count Emails toward Daily Target</strong>
+              <span>Adds +1 toward today's tree growth when you send an email or mark Emailed.</span>
+            </div>
+          </label>
+
+          <label class="toggle-row">
+            <input type="checkbox" id="setGlowOnTarget">
+            <div>
+              <strong>Radiate Gold Glow When Daily Target is Hit</strong>
+              <span>Illuminates the tree canopy in warm gold when today's target reaches 100%.</span>
+            </div>
+          </label>
+
+          <div class="form-row form-row-3" style="margin-top: 12px;">
+            <div class="form-group">
+              <label for="setTreeWidthDesktop">Desktop Tree Width (%)</label>
+              <input type="number" id="setTreeWidthDesktop" min="18" max="42" step="1">
+            </div>
+            <div class="form-group">
+              <label for="setTreeWidthMobile">Mobile Tree Width (%)</label>
+              <input type="number" id="setTreeWidthMobile" min="18" max="38" step="1">
+            </div>
+            <div class="form-group">
+              <label for="setTreeVisibleCrop">Visible Tree Width (%)</label>
+              <input type="number" id="setTreeVisibleCrop" min="40" max="100" step="5">
+            </div>
+          </div>
+
+          <div class="daily-reset-bar">
+            <span>Today's Progress: <strong id="settingsTodaySummary">0 / 20</strong></span>
+            <button id="btnResetDailyCount" class="btn btn-vellum" type="button">Reset Today's Count</button>
+          </div>
+        </div>
+
+        <!-- TAB 3: DIALER & UI PREFERENCES -->
+        <div class="settings-panel" id="stab-dialer">
+          <div class="form-group">
+            <label for="setDefaultStage">Default Queue Tab on Startup</label>
+            <select id="setDefaultStage">
+              <option value="prospects">Prospects</option>
+              <option value="followup">Follow-Up</option>
+              <option value="emailed">Emailed</option>
+              <option value="onboarded">Onboarded</option>
+              <option value="all">All Contacts</option>
+            </select>
+          </div>
 
           <label class="toggle-row">
             <input type="checkbox" id="setAutoStageEmail">
             <div>
-              <strong>Auto-move to Emailed when opening Prospecting Email</strong>
-              <span>Marks the prospect as Emailed right after launching your email compose tab.</span>
+              <strong>Auto-move to Emailed when tapping Send Email</strong>
+              <span>Moves the contact into Emailed right after launching your mail app.</span>
             </div>
           </label>
 
-          <div class="danger-zone">
+          <label class="toggle-row">
+            <input type="checkbox" id="setAutoAdvance">
             <div>
-              <strong>Templates &amp; Database Maintenance</strong>
-              <p>Reset pitch templates back to factory defaults or clear all stored leads.</p>
+              <strong>Auto-advance to Next Lead after Disposition</strong>
+              <span>Immediately loads the next contact in the queue after marking Emailed, No Answer, or Onboard.</span>
+            </div>
+          </label>
+
+          <label class="toggle-row">
+            <input type="checkbox" id="setDefaultEditOpen">
+            <div>
+              <strong>Keep Admin Details Editor Expanded</strong>
+              <span>Always show the inline editable fields when opening a contact card.</span>
+            </div>
+          </label>
+
+          <label class="toggle-row">
+            <input type="checkbox" id="setCompactCards">
+            <div>
+              <strong>Compact Queue Cards</strong>
+              <span>Reduces vertical padding in the contact list so more leads fit on screen.</span>
+            </div>
+          </label>
+
+          <label class="toggle-row">
+            <input type="checkbox" id="setConfirmDelete">
+            <div>
+              <strong>Ask Confirmation Before Deleting Leads</strong>
+              <span>Shows a confirmation dialog before permanently removing a record.</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- TAB 4: DATA & BACKUP -->
+        <div class="settings-panel" id="stab-data">
+          <div class="backup-actions-box">
+            <div>
+              <strong>CSV Backup &amp; Sample Data</strong>
+              <p>Export your current database to CSV or load sample leads for testing.</p>
             </div>
             <div class="danger-actions">
-              <button id="btnResetTemplates" class="btn btn-vellum" type="button">Reset Templates</button>
+              <button id="btnSettingsExportCsv" class="btn btn-vellum" type="button">Export CSV Backup</button>
+              <button id="btnSettingsLoadSamples" class="btn btn-vellum" type="button">Load Sample Leads</button>
+            </div>
+          </div>
+
+          <div class="danger-zone">
+            <div>
+              <strong>Reset Templates &amp; Database</strong>
+              <p>Restore factory settings or wipe all stored contacts from this browser.</p>
+            </div>
+            <div class="danger-actions">
+              <button id="btnResetSettings" class="btn btn-vellum" type="button">Reset All Settings</button>
               <button id="btnClearAllLeads" class="btn btn-danger" type="button">Clear All Leads</button>
             </div>
           </div>
@@ -822,6 +970,6 @@
     </div>
   </dialog>
 
-  <script src="app.js"></script>
+  <script type="module" src="./script.js"></script>
 </body>
 </html>
