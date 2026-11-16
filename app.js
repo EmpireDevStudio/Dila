@@ -57,8 +57,6 @@ Instead of sending a pitch deck, I put together an interactive demo so you can f
 
 https://empiredevstudio.github.io/Demo-Home/
 
-(One small catch: only tap the spinning record once you've finished exploring. The record will take you to an optional reply email that is just a fun way to engage further and "break the ice".)
-
 When you've had a quick scroll, I'd love your unfiltered take:
 1. Where does your team lose the most time with training or spec updates right now?
 2. What feels genuinely useful or is missing from the demo?
