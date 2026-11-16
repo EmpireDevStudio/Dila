@@ -92,7 +92,7 @@
     <!-- LEFT 30% TREE / RIGHT 70% CRM WORKBENCH (LEFT-RIGHT SPLIT ON ALL SCREEN SIZES) -->
     <main class="workbench" id="workbench">
 
-      <!-- 1. PERSISTENT LEFT 30% ROSE-GOLD TREE STAGE -->
+      <!-- 1. PERSISTENT LEFT ROSE-GOLD TREE STAGE -->
       <aside class="tree-stage" id="tree-stage" aria-hidden="true">
         <div class="tree-gold-aura" id="tree-gold-aura"></div>
         <canvas id="tree-canvas"></canvas>
@@ -144,10 +144,10 @@
         </div>
       </aside>
 
-      <!-- 2. RIGHT 70% WORKSPACE SHELL -->
+      <!-- 2. RIGHT 70% PIN-DIAMOND TEXTURED CRM WORKSPACE -->
       <div class="crm-workspace" id="crmWorkspace">
 
-        <!-- QUEUE RAIL -->
+        <!-- CENTRE QUEUE RAIL -->
         <aside class="pane pane-list" id="paneList">
           <div class="list-sticky-top">
             <div class="segmented-control" role="tablist" aria-label="Pipeline Stages">
@@ -157,7 +157,7 @@
               </button>
               <button class="filter-btn" data-stage="followup" role="tab" type="button">
                 <span>Follow-Up</span>
-                <span class="badge badge-blue" id="countFollowup">0</span>
+                <span class="badge badge-warm" id="countFollowup">0</span>
               </button>
               <button class="filter-btn" data-stage="emailed" role="tab" type="button">
                 <span>Emailed</span>
@@ -186,7 +186,7 @@
           <div class="contact-list" id="contactList" role="list"></div>
         </aside>
 
-        <!-- ACTIVE LEAD COCKPIT & INLINE ADMIN DESK -->
+        <!-- RIGHT ACTIVE LEAD COCKPIT & INLINE ADMIN DESK -->
         <section class="pane pane-cockpit" id="paneCockpit" aria-label="Active Contact Desk">
 
           <!-- Mobile Sticky Top Bar -->
@@ -227,7 +227,7 @@
             </div>
           </div>
 
-          <!-- Scrollable Cockpit Body -->
+          <!-- Scrollable Cockpit Body + Sticky Disposition Dock -->
           <div id="cockpitContent" class="cockpit-scroll hidden">
             <div class="cockpit-inner">
 
@@ -257,7 +257,6 @@
                   <div class="hero-top-actions">
                     <span id="cockpitSavePill" class="save-pill">Saved</span>
                     <button id="btnToggleInlineEdit" class="btn-chip" type="button" aria-expanded="false">Edit Details</button>
-                    <button id="btnDeleteLeadMobile" class="btn-chip btn-chip-danger mobile-only-inline" type="button" aria-label="Remove Lead">Delete</button>
                   </div>
                 </div>
 
@@ -276,7 +275,7 @@
                         <svg viewBox="0 0 16 16" width="11" height="11" fill="none" aria-hidden="true">
                           <path d="M3.5 2.5H6L7.2 5.5L5.6 6.7C6.4 8.2 7.8 9.6 9.3 10.4L10.5 8.8L13.5 10V12.5C13.5 13.1 13 13.5 12.4 13.5C7.2 13.2 2.8 8.8 2.5 3.6C2.5 3 2.9 2.5 3.5 2.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
                         </svg>
-                        TAP TO CALL
+                        Tap to Call
                       </span>
                       <span class="tile-value" id="leadPhoneDisplay">No phone</span>
                     </a>
@@ -291,7 +290,7 @@
                           <rect x="2" y="3.5" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
                           <path d="M2.5 4.5L8 8.5L13.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
                         </svg>
-                        SEND EMAIL
+                        Send Email
                       </span>
                       <span class="tile-value" id="leadEmailDisplay">No email</span>
                     </a>
@@ -309,7 +308,7 @@
                           <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.3"/>
                           <path d="M2.8 8H13.2M8 2.5C9.5 4.2 10.2 6.1 10.2 8C10.2 9.9 9.5 11.8 8 13.5C6.5 11.8 5.8 9.9 5.8 8C5.8 6.1 6.5 4.2 8 2.5Z" stroke="currentColor" stroke-width="1.1"/>
                         </svg>
-                        WEBSITE
+                        Website
                       </span>
                       <span class="tile-value" id="leadWebsiteDisplay">No website</span>
                     </a>
@@ -399,33 +398,32 @@
                 </div>
                 <textarea id="leadNotes" rows="3" placeholder="Record gatekeeper names, conversation details, and next steps..."></textarea>
               </div>
+            </div>
 
-              <!-- DISPOSITION BAR (Desktop Inline / Mobile Pinned Thumb Dock) -->
-              <div class="disposition-dock" id="dispositionDock">
-                <div class="disposition-grid">
-                  <button class="disp-btn btn-complete" id="btnDispEmailed" type="button">
-                    <span class="disp-label">Emailed</span>
-                    <span class="disp-hint">Key: E</span>
-                  </button>
-                  <button class="disp-btn btn-na" id="btnDispNA" type="button">
-                    <span class="disp-label">No Answer</span>
-                    <span class="disp-hint">Key: N</span>
-                  </button>
-                  <button class="disp-btn btn-cb" id="btnDispCB" type="button">
-                    <span class="disp-label">Call Back</span>
-                    <span class="disp-hint">Schedule</span>
-                  </button>
-                  <button class="disp-btn btn-onboard" id="btnDispOnboard" type="button">
-                    <span class="disp-label">Onboard</span>
-                    <span class="disp-hint">Key: O</span>
-                  </button>
-                  <button class="disp-btn btn-del desktop-only-disp" id="btnDispDelete" type="button">
-                    <span class="disp-label">Remove</span>
-                    <span class="disp-hint">Delete</span>
-                  </button>
-                </div>
+            <!-- DYNAMIC STICKY DISPOSITION BAR (ALL 5 BUTTONS ON EVERY SCREEN SIZE) -->
+            <div class="disposition-dock" id="dispositionDock">
+              <div class="disposition-grid">
+                <button class="disp-btn btn-complete" id="btnDispEmailed" type="button">
+                  <span class="disp-label">Emailed</span>
+                  <span class="disp-hint">Key: E</span>
+                </button>
+                <button class="disp-btn btn-na" id="btnDispNA" type="button">
+                  <span class="disp-label">No Answer</span>
+                  <span class="disp-hint">Key: N</span>
+                </button>
+                <button class="disp-btn btn-cb" id="btnDispCB" type="button">
+                  <span class="disp-label">Call Back</span>
+                  <span class="disp-hint">Schedule</span>
+                </button>
+                <button class="disp-btn btn-onboard" id="btnDispOnboard" type="button">
+                  <span class="disp-label">Onboard</span>
+                  <span class="disp-hint">Key: O</span>
+                </button>
+                <button class="disp-btn btn-del" id="btnDispDelete" type="button">
+                  <span class="disp-label">Remove</span>
+                  <span class="disp-hint">Delete</span>
+                </button>
               </div>
-
             </div>
           </div>
         </section>
@@ -719,6 +717,7 @@
       <div class="sheet-grabber" aria-hidden="true"></div>
       <div class="dialog-header sheet-header">
         <h3>Schedule Call Back</h3>
+        <button type="button" id="btnCloseCallbackX" class="btn-icon-close" aria-label="Close">✕</button>
       </div>
       <div class="sheet-body">
         <p class="dialog-desc">Lead moves to <strong>Follow-Up</strong> with a scheduled reminder badge.</p>
@@ -736,9 +735,12 @@
         </div>
       </div>
 
-      <div class="dialog-actions sheet-footer">
-        <button id="btnCancelCallback" class="btn btn-vellum" type="button">Cancel</button>
-        <button id="btnConfirmCustomCallback" class="btn btn-primary" type="button">Save Reminder</button>
+      <div class="dialog-actions sheet-footer sheet-footer-split">
+        <button id="btnClearCallback" class="btn btn-danger-outline hidden" type="button">Clear</button>
+        <div class="footer-right-btns">
+          <button id="btnCancelCallback" class="btn btn-vellum" type="button">Cancel</button>
+          <button id="btnConfirmCustomCallback" class="btn btn-primary" type="button">Save Reminder</button>
+        </div>
       </div>
     </div>
   </dialog>

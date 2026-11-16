@@ -1,5 +1,5 @@
 /**
- * DIALLER CRM: POLISHED 30/70 LEFT-TREE OUTREACH DESK & DAILY TARGET ENGINE
+ * DIALLER CRM: RELEASE-POLISH 30/70 LEFT-TREE OUTREACH DESK & DAILY TARGET ENGINE
  * Features:
  *  - Daily outreach target tracker driving the 3D rose-gold blossom tree & gold glow
  *  - Native phone dialer (tel:) and pre-populated mail app (mailto:) on EVERY call/email button
@@ -247,6 +247,7 @@ const state = {
   inlineSaveTimer: null,
   profileSaveTimer: null,
   toastTimer: null,
+  logoSeq: 0,
   treeProgressTarget: 0.14,
   treeProgressSmooth: 0.14,
   treeGlowTarget: 0,
@@ -378,6 +379,7 @@ const el = {
   leadForm: document.getElementById('leadForm'),
   btnDeleteFromModal: document.getElementById('btnDeleteFromModal'),
   dialogCallback: document.getElementById('dialogCallback'),
+  btnClearCallback: document.getElementById('btnClearCallback'),
   dialogSettings: document.getElementById('dialogSettings')
 };
 
@@ -439,7 +441,7 @@ function sanitizeHref(url) {
 
 function formatTelHref(phone) {
   const clean = (phone || '').replace(/[^\d+]/g, '');
-  return clean ? `tel:${clean}` : '#';
+  return /\d/.test(clean) ? `tel:${clean}` : '#';
 }
 
 function interpolate(template, contact, activeSettings = settings) {
@@ -572,7 +574,10 @@ function getDomainFromContact(c) {
 }
 
 function applyLogoToElement(imgEl, fallbackEl, contact) {
+  const token = ++state.logoSeq;
+  imgEl.dataset.logoToken = String(token);
   fallbackEl.textContent = getMonogram(contact.company || contact.name);
+
   const candidates = [];
   if (contact.custom_logo_url && contact.custom_logo_url.trim()) {
     candidates.push(contact.custom_logo_url.trim());
@@ -592,6 +597,7 @@ function applyLogoToElement(imgEl, fallbackEl, contact) {
 
   let idx = 0;
   const tryNext = () => {
+    if (imgEl.dataset.logoToken !== String(token)) return;
     if (idx >= candidates.length) {
       imgEl.classList.add('hidden');
       fallbackEl.classList.remove('hidden');
@@ -605,6 +611,7 @@ function applyLogoToElement(imgEl, fallbackEl, contact) {
 
   imgEl.onerror = tryNext;
   imgEl.onload = () => {
+    if (imgEl.dataset.logoToken !== String(token)) return;
     if (imgEl.naturalWidth <= 1 || imgEl.naturalHeight <= 1) tryNext();
   };
   tryNext();
@@ -644,7 +651,11 @@ function applySettingsToLayout(threeCtrl = null) {
     ? clamp(Number(settings.treeWidthMobile) || 28, 18, 38)
     : clamp(Number(settings.treeWidthDesktop) || 30, 18, 42);
 
+  const visibleRatio = clamp((Number(settings.visibleTreePercent) || 65) / 100, 0.4, 1.0);
+  const svgShiftPct = Math.round((visibleRatio - 1) * 62);
+
   document.documentElement.style.setProperty('--tree-col-width', `${widthPct}vw`);
+  document.documentElement.style.setProperty('--svg-shift-x', `${svgShiftPct}%`);
   document.body.classList.toggle('is-compact-cards', Boolean(settings.compactQueueCards));
 
   updateTreeFromDailyTarget();
@@ -769,7 +780,18 @@ function renderList() {
 
 function selectLead(id, openMobile = true) {
   state.activeId = id;
-  renderList();
+
+  const cards = el.list.querySelectorAll('.contact-card');
+  if (cards.length) {
+    cards.forEach((card) => {
+      const isMatch = card.dataset.id === id;
+      card.classList.toggle('active', isMatch);
+      if (isMatch) card.scrollIntoView({ block: 'nearest' });
+    });
+  } else {
+    renderList();
+  }
+
   renderActiveCockpit();
 
   if (openMobile && window.innerWidth <= 959) {
@@ -934,11 +956,12 @@ function initInlineAdminEditing() {
   });
 
   el.leadNotes.addEventListener('input', () => {
+    const c = state.contacts.find((x) => x.id === state.activeId);
+    if (!c) return;
+    c.notes = el.leadNotes.value;
+
     clearTimeout(state.notesTimer);
     state.notesTimer = setTimeout(async () => {
-      const c = state.contacts.find((x) => x.id === state.activeId);
-      if (!c) return;
-      c.notes = el.leadNotes.value;
       await dbAPI.put(c);
       el.notesSaveIndicator.classList.add('visible');
       setTimeout(() => el.notesSaveIndicator.classList.remove('visible'), 1100);
@@ -1942,16 +1965,27 @@ function initModalAndNavBindings(threeCtrlGetter) {
   document.getElementById('btnDispNA').addEventListener('click', () => setDisposition('no_answer'));
   document.getElementById('btnDispOnboard').addEventListener('click', () => setDisposition('onboarded'));
   document.getElementById('btnDispDelete').addEventListener('click', () => setDisposition('delete'));
-  document.getElementById('btnDeleteLeadMobile').addEventListener('click', () => setDisposition('delete'));
   el.btnJumpToBusinessProfile.addEventListener('click', () => {
     if (state.activeId) openOnboardedProfileById(state.activeId);
   });
 
   document.getElementById('btnDispCB').addEventListener('click', () => {
+    const c = state.contacts.find((x) => x.id === state.activeId);
     document.getElementById('inputCustomCallback').value = '';
+    el.btnClearCallback.classList.toggle('hidden', !(c && c.callback_at));
     el.dialogCallback.showModal();
   });
   document.getElementById('btnCancelCallback').addEventListener('click', () => el.dialogCallback.close());
+  document.getElementById('btnCloseCallbackX').addEventListener('click', () => el.dialogCallback.close());
+  el.btnClearCallback.addEventListener('click', async () => {
+    const c = state.contacts.find((x) => x.id === state.activeId);
+    if (!c) return;
+    c.callback_at = null;
+    await dbAPI.put(c);
+    el.dialogCallback.close();
+    applyFilters();
+    showToast('Call back reminder cleared');
+  });
 
   const scheduleCallback = async (hours, customIso = null) => {
     const c = state.contacts.find((x) => x.id === state.activeId);
@@ -2013,16 +2047,18 @@ function initModalAndNavBindings(threeCtrlGetter) {
     const headers = rows[0].map((h) => h.trim().toLowerCase());
     const col = (aliases) => headers.findIndex((h) => aliases.includes(h));
     const idx = {
-      name: col(['name', 'contact', 'contact_name', 'full name']),
-      phone: col(['phone', 'mobile', 'tel', 'telephone']),
-      email: col(['email', 'e-mail', 'mail']),
+      name: col(['name', 'contact', 'contact_name', 'full name', 'full_name']),
+      firstName: col(['first name', 'first_name', 'firstname']),
+      lastName: col(['last name', 'last_name', 'lastname']),
+      phone: col(['phone', 'phone number', 'phone_number', 'mobile', 'tel', 'telephone']),
+      email: col(['email', 'email address', 'email_address', 'e-mail', 'mail']),
       country: col(['country']),
       city: col(['city', 'town']),
-      address: col(['street_address', 'address', 'street']),
-      postal: col(['postal_code', 'zip', 'postcode']),
-      company: col(['company', 'business', 'organization', 'venue']),
-      title: col(['job_title', 'title', 'role']),
-      website: col(['website', 'site', 'domain', 'homepage', 'contact_form_url']),
+      address: col(['street_address', 'address', 'street', 'street address']),
+      postal: col(['postal_code', 'postal', 'zip', 'zip code', 'postcode']),
+      company: col(['company', 'company name', 'business', 'business name', 'organization', 'venue']),
+      title: col(['job_title', 'job title', 'title', 'role']),
+      website: col(['website', 'website url', 'web', 'url', 'site', 'domain', 'homepage', 'contact_form_url']),
       notes: col(['notes', 'comments', 'memo']),
       stage: col(['stage', 'status']),
       onboardedAt: col(['onboarded_at', 'onboarded_date'])
@@ -2032,11 +2068,14 @@ function initModalAndNavBindings(threeCtrlGetter) {
     for (let i = 1; i < rows.length; i++) {
       const r = rows[i];
       const get = (k) => (idx[k] !== -1 ? (r[idx[k]] || '').trim() : '');
-      const company = get('company'); const name = get('name'); const phone = get('phone'); const email = get('email');
-      if (!company && !name && !phone && !email) continue;
+      const company = get('company');
+      const fullName = get('name') || [get('firstName'), get('lastName')].filter(Boolean).join(' ');
+      const phone = get('phone');
+      const email = get('email');
+      if (!company && !fullName && !phone && !email) continue;
       const c = normalizeContact({
         id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-        company, name, phone, email,
+        company, name: fullName, phone, email,
         country: get('country'), city: get('city'), street_address: get('address'),
         postal_code: get('postal'), job_title: get('title'), website: get('website'),
         notes: get('notes'), stage: get('stage') || 'prospects', onboarded_at: get('onboardedAt')
@@ -2046,6 +2085,9 @@ function initModalAndNavBindings(threeCtrlGetter) {
       imported++;
     }
     e.target.value = '';
+    if (imported > 0 && state.stageFilter === 'onboarded') {
+      state.stageFilter = 'prospects';
+    }
     applyFilters();
     showToast(`Imported ${imported} contacts`);
   });
@@ -2363,6 +2405,7 @@ function initModalAndNavBindings(threeCtrlGetter) {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') setMobileMoreOpen(false);
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (el.dialogForm.open || el.dialogCallback.open || el.dialogSettings.open) return;
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
 
@@ -2375,13 +2418,18 @@ function initModalAndNavBindings(threeCtrlGetter) {
     if (e.key === ',') { e.preventDefault(); openSettings(settings); return; }
     if (state.stageFilter === 'onboarded') return;
 
-    if (e.key === 'j' || e.key === 'ArrowDown') stepLead(1);
-    else if (e.key === 'k' || e.key === 'ArrowUp') stepLead(-1);
-    else if (e.key === 'c' || e.key === 'C') {
+    if (e.key === 'j' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      stepLead(1);
+    } else if (e.key === 'k' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      stepLead(-1);
+    } else if (e.key === 'c' || e.key === 'C') {
       const c = state.contacts.find((x) => x.id === state.activeId);
-      if (c && c.phone) {
+      const telHref = c ? formatTelHref(c.phone) : '#';
+      if (telHref !== '#') {
         if (settings.countCallsTowardTarget) incrementDailyTarget(1);
-        window.location.href = formatTelHref(c.phone);
+        window.location.href = telHref;
       }
     } else if (e.key === 'e' || e.key === 'E') {
       setDisposition('emailed');
