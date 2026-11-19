@@ -12,9 +12,9 @@
    ========================================================================== */
 const TREE_CDN_URL = 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 const TREE_SEED = 1847;
-const SETTINGS_KEY = 'DiallerCRM_Settings_v2';
-const DAILY_KEY = 'DiallerCRM_Daily_v1';
-const DB_NAME = 'DiallerCRM_DB';
+const SETTINGS_KEY = 'DiallerCRM_Settings_v0';
+const DAILY_KEY = 'DiallerCRM_Daily_v0';
+const DB_NAME = 'Dila_DB';
 const DB_VERSION = 1;
 
 const DEFAULT_SETTINGS = {
