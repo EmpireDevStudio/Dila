@@ -496,7 +496,9 @@ function buildEmailHref(contact, emailOverride = null, recipientNameOverride = n
 
   const to = encodeURIComponent(rawEmail.trim());
   const su = encodeURIComponent(interpolate(activeSettings.emailSubject, contextContact, activeSettings));
-  const body = encodeURIComponent(interpolate(activeSettings.emailBody, contextContact, activeSettings));
+  const bodyText = interpolate(activeSettings.emailBody, contextContact, activeSettings)
+    .replace(/\r\n|\r|\n/g, '\r\n');
+  const body = encodeURIComponent(bodyText);
 
   switch (activeSettings.emailProvider) {
     case 'gmail':
@@ -507,7 +509,7 @@ function buildEmailHref(contact, emailOverride = null, recipientNameOverride = n
       return `https://outlook.office.com/mail/deeplink/compose?to=${to}&subject=${su}&body=${body}`;
     case 'mailto':
     default:
-      return `mailto:${to}?subject=${su}&body=${body}`;
+      return `mailto:${to.replace(/%40/gi, '@')}?subject=${su}&body=${body}`;
   }
 }
 
@@ -515,8 +517,9 @@ function configureEmailAnchor(anchorEl, href) {
   if (!anchorEl) return;
   anchorEl.href = href;
   const isDisabled = href === '#';
+  const opensWebMail = /^https?:\/\//i.test(href);
   anchorEl.classList.toggle('is-disabled', isDisabled);
-  if (!isDisabled) {
+  if (!isDisabled && opensWebMail) {
     anchorEl.setAttribute('target', '_blank');
     anchorEl.setAttribute('rel', 'noopener noreferrer');
   } else {
