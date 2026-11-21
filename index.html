@@ -12,10 +12,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="intro-pending">
+  <!-- STARTUP INTRO OVERLAY -->
+  <div id="appIntroOverlay" class="intro-overlay" aria-label="Startup intro">
+    <video
+      id="appIntroVideo"
+      class="intro-video"
+      muted
+      playsinline
+      webkit-playsinline
+      autoplay
+      preload="auto"
+      aria-hidden="true"
+    ></video>
+    <button id="btnSkipIntro" class="intro-skip-btn" type="button" aria-label="Skip intro">Skip</button>
+  </div>
+
   <div class="atmosphere-layer" aria-hidden="true"></div>
 
   <div class="app-shell">

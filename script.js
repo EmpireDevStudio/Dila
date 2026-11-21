@@ -1,6 +1,7 @@
 /**
  * DIALLER CRM: RELEASE-POLISH 30/70 LEFT-TREE OUTREACH DESK & DAILY TARGET ENGINE
  * Features:
+ *  - Dynamic startup intro video (intro_desktop.mp4 / mobile_intro.mp4) with aspect-ratio fitting & smooth transition
  *  - Daily outreach target tracker driving the 3D rose-gold blossom tree & gold glow
  *  - Native phone dialer (tel:) and pre-populated mail app (mailto:) on EVERY call/email button
  *  - 4-tab extensive Settings desk (Sender & Email, Daily Target & Tree, Dialer & UI, Data)
@@ -16,6 +17,17 @@ const SETTINGS_KEY = 'DiallerCRM_Settings_v0';
 const DAILY_KEY = 'DiallerCRM_Daily_v0';
 const DB_NAME = 'Dila_DB';
 const DB_VERSION = 1;
+
+const INTRO_CONFIG = {
+  desktopSrc: './intro_desktop.mp4',
+  desktopAspect: 16 / 9,
+  mobileSrc: './mobile_intro.mp4',
+  mobileAspect: 9 / 16,
+  maxCropRatio: 1.48,
+  crossfadeLeadSec: 0.45,
+  fadeDurationMs: 680,
+  maxWaitMs: 7000
+};
 
 const DEFAULT_SETTINGS = {
   // Tab 1: Sender & Email
@@ -123,6 +135,111 @@ function incrementDailyTarget(amount = 1) {
   const target = Math.max(1, Number(settings.dailyTarget) || 20);
   if (prev < target && dailyProgress.count >= target) {
     showToast(`Daily target reached (${dailyProgress.count} / ${target}). Tree in full bloom!`);
+  }
+}
+
+/* ==========================================================================
+   1B. DYNAMIC STARTUP INTRO CONTROLLER
+   ========================================================================== */
+function selectBestIntroForViewport() {
+  const w = Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1);
+  const h = Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
+  const vpRatio = w / h;
+
+  const desktopDist = Math.abs(Math.log(vpRatio / INTRO_CONFIG.desktopAspect));
+  const mobileDist = Math.abs(Math.log(vpRatio / INTRO_CONFIG.mobileAspect));
+  const useDesktop = desktopDist <= mobileDist;
+
+  const chosenSrc = useDesktop ? INTRO_CONFIG.desktopSrc : INTRO_CONFIG.mobileSrc;
+  const chosenAspect = useDesktop ? INTRO_CONFIG.desktopAspect : INTRO_CONFIG.mobileAspect;
+  const cropRatio = Math.max(vpRatio / chosenAspect, chosenAspect / vpRatio);
+
+  return {
+    src: chosenSrc,
+    fitContain: cropRatio > INTRO_CONFIG.maxCropRatio
+  };
+}
+
+function initStartupIntro() {
+  const overlay = document.getElementById('appIntroOverlay');
+  const video = document.getElementById('appIntroVideo');
+  const skipBtn = document.getElementById('btnSkipIntro');
+
+  if (!overlay || !video) {
+    document.body.classList.remove('intro-pending');
+    return;
+  }
+
+  let finished = false;
+  let safetyTimer = null;
+
+  const applyFit = (allowSourceSwap = false) => {
+    const choice = selectBestIntroForViewport();
+    video.classList.toggle('is-fit-contain', choice.fitContain);
+    if (allowSourceSwap && video.dataset.introSrc !== choice.src) {
+      video.dataset.introSrc = choice.src;
+      video.src = choice.src;
+      video.load();
+    }
+  };
+
+  const onResize = () => applyFit(false);
+
+  const finishIntro = () => {
+    if (finished) return;
+    finished = true;
+
+    clearTimeout(safetyTimer);
+    window.removeEventListener('resize', onResize);
+
+    document.body.classList.remove('intro-pending');
+    overlay.classList.add('is-exiting');
+
+    setTimeout(() => {
+      overlay.classList.add('is-done');
+      overlay.setAttribute('aria-hidden', 'true');
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    }, INTRO_CONFIG.fadeDurationMs);
+  };
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    overlay.classList.add('is-done');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('intro-pending');
+    return;
+  }
+
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+  applyFit(true);
+
+  window.addEventListener('resize', onResize, { passive: true });
+
+  video.addEventListener('timeupdate', () => {
+    if (!finished && Number.isFinite(video.duration) && video.duration > 0) {
+      if (video.currentTime >= video.duration - INTRO_CONFIG.crossfadeLeadSec) {
+        finishIntro();
+      }
+    }
+  });
+
+  video.addEventListener('ended', finishIntro, { once: true });
+  video.addEventListener('error', finishIntro, { once: true });
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', finishIntro, { once: true });
+  }
+
+  safetyTimer = setTimeout(finishIntro, INTRO_CONFIG.maxWaitMs);
+
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(() => {
+      finishIntro();
+    });
   }
 }
 
@@ -2455,7 +2572,20 @@ function initModalAndNavBindings(threeCtrlGetter) {
   });
 }
 
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .catch((err) => {
+        console.warn('Service worker registration failed:', err);
+      });
+  });
+}
+
 async function bootstrap() {
+  initStartupIntro();
+
   let threeCtrl = null;
   initInlineAdminEditing();
   initModalAndNavBindings(() => threeCtrl);
