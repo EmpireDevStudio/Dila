@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'dialler-crm-v2';
+const CACHE_VERSION = 'dialler-crm-v3';
 const APP_SHELL = [
   './',
   './index.html',

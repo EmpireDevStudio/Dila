@@ -2585,6 +2585,7 @@ function registerServiceWorker() {
 
 async function bootstrap() {
   initStartupIntro();
+  registerServiceWorker();
 
   let threeCtrl = null;
   initInlineAdminEditing();
